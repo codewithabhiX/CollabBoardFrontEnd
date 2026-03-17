@@ -32,7 +32,7 @@ export default function AddTask({ id,handlecancel, refreshTasks }: AddTaskProps)
           taskAssignedTo: formData.get("taskAssignedTo")
         };
 
-        const url=isEditingTask ? `${process.env.BACKEND_URI}/api/taskcard/${id}` : `${process.env.BACKEND_URI}/api/taskcard`;
+        const url=isEditingTask ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/taskcard/${id}` : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/taskcard`;
     
         const response = await fetch(url, {
           method: isEditingTask ? "PUT" : "POST",

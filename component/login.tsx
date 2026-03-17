@@ -14,7 +14,7 @@ export default function Login() {
       password: formData.get("password"),
     };
 
-    const response = await fetch(`${process.env.BACKEND_URI}/api/user/login`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

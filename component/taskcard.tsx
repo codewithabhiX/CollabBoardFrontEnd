@@ -12,7 +12,7 @@ type TaskCardProps = {
 
 async function deleteCard(id : TaskCardProps["id"],refreshTasks: TaskCardProps["refreshTasks"]) { 
     try {
-    let response = await fetch(`${process.env.BACKEND_URI}/api/taskcard/${id}`, {
+    let response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/taskcard/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

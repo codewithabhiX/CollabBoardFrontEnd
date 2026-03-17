@@ -29,7 +29,7 @@ const [getTasks, setGetTasks] = useState<Task[]>([]);
 
   async function fetchTasks() {
         try {
-      const response = await fetch(`${process.env.BACKEND_URI}/api/taskcard`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/taskcard`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -72,7 +72,7 @@ updateTaskStatus(taskId,newStatus)
 
 async function updateTaskStatus(id:string,status:string){
 
-await fetch(`${process.env.BACKEND_URI}/api/taskcard/${id}`,{
+await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/taskcard/${id}`,{
 method:"PUT",
 headers:{
 "Content-Type":"application/json",
