@@ -13,6 +13,7 @@ export default function Home() {
   description: string;
   status: string;
   taskAssignedTo: string;
+  userId:string;
 };
 
 const [tasks, setTasks] = useState(false);
@@ -144,6 +145,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
+                      addBy={task.userId}
                     />
                     </div>
                     )}
@@ -173,6 +175,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
+                      addBy={task.userId}
                     />
                     </div>
                     )}
@@ -204,6 +207,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={ fetchTasks}
+                      addBy={task.userId}
                     />
                     </div>
                     )}

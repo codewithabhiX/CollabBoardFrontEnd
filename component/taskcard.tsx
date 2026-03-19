@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTask from "./addtask";
+import {jwtDecode} from "jwt-decode"
 
 type TaskCardProps = {
     id: string;
@@ -8,6 +9,7 @@ type TaskCardProps = {
     description: string;
     assignedTo: string;
     refreshTasks: () => Promise<void>; 
+    addBy:string;
 }
 
 async function deleteCard(id : TaskCardProps["id"],refreshTasks: TaskCardProps["refreshTasks"]) { 
@@ -33,11 +35,27 @@ async function deleteCard(id : TaskCardProps["id"],refreshTasks: TaskCardProps["
 }
 
 
-export default function TaskCard({id, title, description, assignedTo, refreshTasks}: TaskCardProps) {
+export default function TaskCard({id, title, description, assignedTo, refreshTasks,addBy}: TaskCardProps) {
    
     const [taskId, setTaskId] = useState("");
     const [isEditingTask, setIsEditingTask] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
 
+    useEffect(function(){
+       let token= localStorage.getItem("token");
+
+       if(token){
+        try {
+            const decode:any= jwtDecode(token)
+            console.log(decode);
+            if(decode.id==addBy){
+                setIsOwner(true);
+            }
+        }catch(err){
+            console.error('invalid token',err)
+        }
+       }
+    },[addBy])
     return (
         <>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
@@ -46,6 +64,7 @@ export default function TaskCard({id, title, description, assignedTo, refreshTas
                 {description}
             </p>
             <span className="text-sm text-gray-500">Assigned to: {assignedTo}</span>
+            {isOwner ? (
             <div className="flex justify-between items-center">
                 <button className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={ () => {setTaskId(id); setIsEditingTask(true)}}>
                     Edit
@@ -53,7 +72,8 @@ export default function TaskCard({id, title, description, assignedTo, refreshTas
                 <button className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500" onClick={ () => deleteCard(id, refreshTasks)}>
                     Delete
                 </button>
-            </div>
+            </div>)
+          :(null)}
         </div>
         {isEditingTask && <AddTask handlecancel={() => setIsEditingTask(false)}  refreshTasks={refreshTasks} id={taskId}/>}
         </>
