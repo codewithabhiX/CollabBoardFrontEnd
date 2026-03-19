@@ -12,7 +12,8 @@ export default function Register() {
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
-      password: formData.get("password")
+      password: formData.get("password"),
+      userName :formData.get("userName")
     };
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/register`, {
@@ -45,8 +46,14 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm ">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="name"
             name="name"
+            className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            placeholder="Username"
+            name="userName"
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
