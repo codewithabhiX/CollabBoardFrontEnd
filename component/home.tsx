@@ -4,6 +4,7 @@ import TaskCard from "./taskcard";
 import AddTask from "./addtask";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { jwtDecode } from "jwt-decode";
 
 export default function Home() {
 
@@ -18,6 +19,7 @@ export default function Home() {
 
 const [tasks, setTasks] = useState(false);
 const [getTasks, setGetTasks] = useState<Task[]>([]);
+const [isOwner, setIsOwner] = useState("");
 
   function handleAddTask() {
     setTasks(!tasks);
@@ -49,9 +51,24 @@ const [getTasks, setGetTasks] = useState<Task[]>([]);
     }
   }
 
+  function specificSignUserTask(){
+   let token= localStorage.getItem("token");
+
+       if(token){
+        try {
+            const decode:any= jwtDecode(token)
+            console.log(decode);
+                setIsOwner(decode.id);
+        }catch(err){
+            console.error('invalid token',err)
+        }
+       }
+  }
+   
 
   useEffect(function () {
     fetchTasks();
+    specificSignUserTask();
   }, []);
 
   
@@ -61,6 +78,7 @@ if(!result.destination) return
 
 const taskId = result.draggableId
 const newStatus = result.destination.droppableId
+
 
 const updatedTasks = getTasks.map((task) =>
     task._id === taskId ? { ...task, status: newStatus } : task
@@ -81,7 +99,12 @@ authorization:`Bearer ${localStorage.getItem("token")}`
 },
 body:JSON.stringify({status})
 })
+
 }
+
+  
+
+
 
   return (
     <>
@@ -134,7 +157,7 @@ body:JSON.stringify({status})
                 .filter((task) => task.status === "To Do")
                 .map((task, index) => (
                      
-                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={task.userId !== isOwner} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
                         
@@ -145,7 +168,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
-                      addBy={task.userId}
+                      addBy={task.userId ===isOwner}
                     />
                     </div>
                     )}
@@ -165,7 +188,7 @@ body:JSON.stringify({status})
               {getTasks
                 .filter((task) => task.status === "In Progress")
                 .map((task, index) => (
-                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                    <Draggable key={task._id} draggableId={task._id}  isDragDisabled={task.userId !== isOwner} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                     <TaskCard
@@ -175,7 +198,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
-                      addBy={task.userId}
+                      addBy={task.userId ===isOwner}
                     />
                     </div>
                     )}
@@ -196,7 +219,7 @@ body:JSON.stringify({status})
               {getTasks
                 .filter((task ) => task.status === "Done")
                 .map((task, index) => (
-                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={task.userId !== isOwner} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 
@@ -207,7 +230,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={ fetchTasks}
-                      addBy={task.userId}
+                      addBy={task.userId ===isOwner}
                     />
                     </div>
                     )}

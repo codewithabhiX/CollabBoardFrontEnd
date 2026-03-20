@@ -9,7 +9,7 @@ type TaskCardProps = {
     description: string;
     assignedTo: string;
     refreshTasks: () => Promise<void>; 
-    addBy:string;
+    addBy:boolean;
 }
 
 async function deleteCard(id : TaskCardProps["id"],refreshTasks: TaskCardProps["refreshTasks"]) { 
@@ -39,23 +39,7 @@ export default function TaskCard({id, title, description, assignedTo, refreshTas
    
     const [taskId, setTaskId] = useState("");
     const [isEditingTask, setIsEditingTask] = useState(false);
-    const [isOwner, setIsOwner] = useState(false);
-
-    useEffect(function(){
-       let token= localStorage.getItem("token");
-
-       if(token){
-        try {
-            const decode:any= jwtDecode(token)
-            console.log(decode);
-            if(decode.id==addBy){
-                setIsOwner(true);
-            }
-        }catch(err){
-            console.error('invalid token',err)
-        }
-       }
-    },[addBy])
+  
     return (
         <>
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
@@ -64,7 +48,7 @@ export default function TaskCard({id, title, description, assignedTo, refreshTas
                 {description}
             </p>
             <span className="text-sm text-gray-500">Assigned to: {assignedTo}</span>
-            {isOwner ? (
+            {addBy ? (
             <div className="flex justify-between items-center">
                 <button className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={ () => {setTaskId(id); setIsEditingTask(true)}}>
                     Edit
