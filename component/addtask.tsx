@@ -43,7 +43,7 @@ export default function AddTask({ id,handlecancel, refreshTasks }: AddTaskProps)
           
           body: JSON.stringify(data)
         });
-    
+        console.log('abhishek')
         const result = await response.json();
         console.log(result);
         console.log(response.ok);

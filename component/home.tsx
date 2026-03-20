@@ -17,9 +17,15 @@ export default function Home() {
   userId:string;
 };
 
+type User={
+  id:string;
+  userName:string;
+  email:string;
+}
+
 const [tasks, setTasks] = useState(false);
 const [getTasks, setGetTasks] = useState<Task[]>([]);
-const [isOwner, setIsOwner] = useState("");
+const [isOwner, setIsOwner] = useState<User|null>(null);
 
   function handleAddTask() {
     setTasks(!tasks);
@@ -58,7 +64,7 @@ const [isOwner, setIsOwner] = useState("");
         try {
             const decode:any= jwtDecode(token)
             console.log(decode);
-                setIsOwner(decode.id);
+                setIsOwner(decode);
         }catch(err){
             console.error('invalid token',err)
         }
@@ -157,7 +163,7 @@ body:JSON.stringify({status})
                 .filter((task) => task.status === "To Do")
                 .map((task, index) => (
                      
-                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={task.userId !== isOwner} index={index}>
+                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={!(task.userId === isOwner?.id || task.taskAssignedTo===isOwner?.userName)} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
                         
@@ -168,7 +174,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
-                      addBy={task.userId ===isOwner}
+                      addBy={task.userId ===isOwner?.id}
                     />
                     </div>
                     )}
@@ -188,7 +194,7 @@ body:JSON.stringify({status})
               {getTasks
                 .filter((task) => task.status === "In Progress")
                 .map((task, index) => (
-                    <Draggable key={task._id} draggableId={task._id}  isDragDisabled={task.userId !== isOwner} index={index}>
+                    <Draggable key={task._id} draggableId={task._id}  isDragDisabled={!(task.userId === isOwner?.id || task.taskAssignedTo===isOwner?.userName)} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                     <TaskCard
@@ -198,7 +204,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={fetchTasks}
-                      addBy={task.userId ===isOwner}
+                      addBy={task.userId ===isOwner?.id}
                     />
                     </div>
                     )}
@@ -219,7 +225,7 @@ body:JSON.stringify({status})
               {getTasks
                 .filter((task ) => task.status === "Done")
                 .map((task, index) => (
-                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={task.userId !== isOwner} index={index}>
+                    <Draggable key={task._id} draggableId={task._id} isDragDisabled={!(task.userId === isOwner?.id || task.taskAssignedTo===isOwner?.userName)} index={index}>
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 
@@ -230,7 +236,7 @@ body:JSON.stringify({status})
                       description={task.description}
                       assignedTo={task.taskAssignedTo}
                       refreshTasks={ fetchTasks}
-                      addBy={task.userId ===isOwner}
+                      addBy={task.userId ===isOwner?.id}
                     />
                     </div>
                     )}
