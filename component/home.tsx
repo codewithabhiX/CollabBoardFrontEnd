@@ -226,6 +226,7 @@ body:JSON.stringify({status})
                 .filter((task ) => task.status === "Done")
                 .map((task, index) => (
                     <Draggable key={task._id} draggableId={task._id} isDragDisabled={!(task.userId === isOwner?.id || task.taskAssignedTo===isOwner?.userName)} index={index}>
+                      
                     {(provided) => (
                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 
